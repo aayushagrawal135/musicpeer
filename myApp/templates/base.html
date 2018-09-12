@@ -1,0 +1,35 @@
+<html>
+    <head>
+        {% if title %}
+        <title>{{ title }} - Music Peer</title>
+        {% else %}
+        <title>Music Peer</title>
+        {% endif %}
+    </head>
+    <body>
+      <div>
+         Music Peer:
+         <a href="{{ url_for('index') }}">Home</a>
+
+         <!-- current_user is function from LoginManager: It can be used in all the template files : Doubt, how-->
+         {% if current_user.is_anonymous %}
+         <a href="{{ url_for('login') }}">Login</a>
+         {% else %}
+         <a href="{{ url_for('logout') }}">Logout</a>
+         {% endif %}
+      </div>
+        <hr>
+        <!-- flush out all the flash mesaages as list below horizontal ruled line  in a loop -->
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+        <!-- a block with name 'content' can put itself here (coming from any of the derived html files) -->
+        {% block content %}{% endblock %}
+    </body>
+</html>
