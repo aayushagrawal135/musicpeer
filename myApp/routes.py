@@ -1,6 +1,7 @@
 from flask import render_template, flash, redirect, request, url_for
 from myApp import app, db
 from myApp.forms import LoginForm, RegistrationForm
+from myApp.Page import ResultPage
 from myApp.models import User
 from flask_login import logout_user, login_required, current_user, login_user
 from werkzeug.urls import url_parse
@@ -24,7 +25,9 @@ def index():
     # from 2nd argument on
     print(request.form)
     value = request.form['q']
-    print("i am her where are you ",value)
+    print("%%%%%%%%%%%%%%%%", value)
+    page = ResultPage(value)
+    print("@@@@@@@@@@@@@@@@", page.get_results())
     return render_template('index.html', title='Home Page')
 
 
