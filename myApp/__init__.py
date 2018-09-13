@@ -15,5 +15,8 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+root_url = "http://ws.audioscrobbler.com/2.0/"
+API_KEY = "a0b8a0a745497e69b39e4815af5e923d"
+
 # routes will contain the maping of urls and the function (view functions) to be executed correspondingly
 from myApp import routes, models
