@@ -5,24 +5,29 @@ from myApp.models import User
 from flask_login import logout_user, login_required, current_user, login_user
 from werkzeug.urls import url_parse
 
+@app.route('/', methods = ['GET', 'POST'])
+@login_required
+def start():
+    print("#################################")
+    return render_template('index.html')
+
+
 # lines above the function: called decorators, they draw the conditions when the
 # following function should be run
 # A decorator-function for home page
-@app.route('/')
-@app.route('/index')
+@app.route('/index', methods = ['GET', 'POST'])
 # a decorator/ function from the LoginManager class stating protocol that only logged in
 # users can enter the following function
 @login_required
 def index():
-    # raw data for testing
-
-
-
     # render template lets the .html take over that is mentioned in the 1st argument
-    # from 2nd argument onwards, it the values that you want to pass to that particular .html
-    # for example: in title= "Home Page", "Home page" is the value passed, title is the variable
-    # that can be used to access this value.
+    # from 2nd argument on
+    print(request.form)
+    value = request.form['q']
+    print("i am her where are you ",value)
     return render_template('index.html', title='Home Page')
+
+
 
 # decorator-function for Login
 # methods carry what direction of passing of data can occur
