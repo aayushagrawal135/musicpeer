@@ -12,5 +12,19 @@ redirected by:
 
 <!-- this page is evoked only when there is a user logged in, not otherwise-->
 {% block content %}
-    <h1>Hi, {{ current_user.username }}!</h1>
+    {% if page == None %}
+      <h1>Hi, {{ current_user.username }}!</h1>
+    {% else %}
+      <ul>
+        {% for results in page %}
+            <li>
+              <div>
+                  <a href = "{{url_for('clicked_artist_details', query=results.name)}}">{{results.name}}</a>
+                  <!-- <a href= "url_for('clicked_artist_details', query = {{results.name}})">{{results.name}}</a> -->
+                  <!-- <a href = {{results.url}}>{{results.name}}</a> -->
+              </div>
+            </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
 {% endblock %}

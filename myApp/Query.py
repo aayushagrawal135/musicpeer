@@ -11,6 +11,7 @@ class ResultQuery():
 
     def __init__(self, inp):
         self.data = inp
+        
         self.name = self.set_name()
         self.listeners = self.set_listensers()
         self.url = self.set_url()

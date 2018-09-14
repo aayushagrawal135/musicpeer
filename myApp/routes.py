@@ -2,14 +2,15 @@ from flask import render_template, flash, redirect, request, url_for
 from myApp import app, db
 from myApp.forms import LoginForm, RegistrationForm
 from myApp.Page import ResultPage
-from myApp.models import User
+from myApp.Artist import Artist
+from myApp.models import User, History
 from flask_login import logout_user, login_required, current_user, login_user
 from werkzeug.urls import url_parse
 
 @app.route('/', methods = ['GET', 'POST'])
 @login_required
 def start():
-    print("#################################")
+    print("#############started####################")
     return render_template('index.html')
 
 
@@ -24,12 +25,15 @@ def index():
     # render template lets the .html take over that is mentioned in the 1st argument
     # from 2nd argument on
     print(request.form)
-    value = request.form['q']
-    print("%%%%%%%%%%%%%%%%", value)
-    page = ResultPage(value)
-    print("@@@@@@@@@@@@@@@@", page.get_results())
-    return render_template('index.html', title='Home Page')
-
+    value = request.form.get('q')
+    if value != None:
+        #print("%%%%%%%%%%%%%%%%", value)
+        page = ResultPage(value)
+        page = page.get_results()
+        #print("@@@@@@@@@@@@@@@@", page)
+        return render_template('index.html', title='Home Page', page=page)
+    else:
+        return render_template('index.html', title='Home Page', page=None)
 
 
 # decorator-function for Login
@@ -46,6 +50,9 @@ def login():
     if form.validate_on_submit():
         # if username-password pair fails: redirect to same page, login again
         user = User.query.filter_by(username=form.username.data).first()
+        print(type(user))
+        print(user)
+
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
             return redirect(url_for('login'))
@@ -86,3 +93,17 @@ def register():
         # if registration is successful go to login
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
+@app.route('/clicked_artist_details/<query>', methods=['GET', 'POST'])
+@login_required
+def clicked_artist_details(query):
+    log = History(username=current_user, body=query)
+    #db.session.add(log)
+    #db.session.commit()
+    print('Log added')
+    artist = Artist(query)
+    return render_template('clicked_artist_details.html', artist=artist)
+
+@app.route('/search_history')
+def search_history():
+    return render_template('search_history.html')

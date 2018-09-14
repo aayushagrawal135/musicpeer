@@ -14,12 +14,13 @@
          {% if current_user.is_anonymous %}
             <a href="{{ url_for('login') }}">Login</a>
          {% else %}
-
+             <a href="{{ url_for('search_history') }}">Search-History</a>
              <a href="{{ url_for('logout') }}">Logout</a>
+
              <form action=" {{ url_for('index') }}" method="post">
                <input type="text" name="q">
                <input type="submit">
-             </form>     
+             </form>
          {% endif %}
       </div>
         <hr>

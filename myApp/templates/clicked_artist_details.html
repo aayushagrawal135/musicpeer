@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+<!--
+data = None
+  ontour = None
+  tags = None
+  image = None
+  similar = None
+  stats = None
+  name = None
+  bio = None
+-->
+{% block content %}
+<div>
+  <h1>Name : </h1> {{artist.name}}
+</div>
+<hr>
+
+<div>
+  <h1>Stats : </h1>
+  listeners : {{artist.stats['listeners']}} | playcount : {{artist.stats['playcount']}}
+</div>
+<hr>
+
+<div>
+  <h1>Bio : </h1> {{artist.bio[0]}}
+  <a href = "{{artist.bio[1]}}"> Read More</a>
+</div>
+<hr>
+
+<div>
+  <h1>Hash Tags : </h1>
+  <ul>
+    {% for key, value in artist.tags.items() %}
+      <div>
+        <l1> <a href = {{value}} > {{key}} </a> </li>
+      </div>
+    {% endfor %}
+  </ul>
+</div>
+<hr>
+
+<div>
+  <h1>Similar Artists :</h1>
+  <ul>
+    {% for sim in artist.similar %}
+      <div>
+        <li><a href = "https://www.last.fm/music/{{sim}}"</a> {{sim}}</li>
+      </div>
+    {% endfor %}
+  </ul>
+</div>
+
+<hr>
+{% endblock %}
+<hr>

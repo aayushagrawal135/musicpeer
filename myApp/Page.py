@@ -16,7 +16,7 @@ class ResultPage():
 
     def set_results(self, artist):
         url = root_url + "?method=artist.search&artist=" + artist + "&api_key=" + API_KEY + "&format=json"
-        PARAMS = {'artist':artist, 'limit':10}
+        PARAMS = {'artist':artist, 'limit':30}
 
         response = requests.get(url = url, params = PARAMS)
         temp = response.json()
