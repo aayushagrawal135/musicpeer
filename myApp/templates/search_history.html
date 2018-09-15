@@ -1,0 +1,9 @@
+<!-- Inherit navbar from from base.html -->
+{% extends "base.html" %}
+
+<!-- Below block would be put at the location specified in base.html
+    This block should do 2 things, list search log of logged in user
+    Provide a function to Clear History-->
+{% block content %}
+    <p><h1>Your past is here, {{current_user.username}}</h1><a href="#">Get a new beginning!</a></p>
+{% endblock %}

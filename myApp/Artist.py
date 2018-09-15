@@ -1,34 +1,30 @@
 # once you click on a particular artist, you can get all about him
-
+import requests
 from myApp import API_KEY, root_url
 
 #ontour, mbid, tags, image, streamable, similar, stats, url, name, bio
 class Artist():
-    data = None
-    ontour = None
-    tags = None
-    image = None
-    similar = None
-    stats = None
-    name = None
-    bio = None
 
-    def __init__(self, atist_name):
-        self.data = set_artist(artist_name)
+    def __init__(self, artist_name):
+        self.data = self.set_artist(artist_name)
+        self.stats = self.set_stats()
+        self.name = self.set_name()
+        self.similar = self.set_similar_artist()
+        self.bio = self.set_bio()
+        self.image = self.set_image()
+        self.ontour = self.set_ontour()
+        self.tags = self.set_tags()
 
-        self.name = set_name()
-        self.similar = set_similar_artist()
-        self.bio = set_bio()
-        self.image = set_image()
-        self.ontour = set_ontour()
-        self.tags = set_tags()
-
+    # make URL, pass parameters, get response, get it in JSON
     def set_artist(self, artist):
         url = root_url + "?method=artist.getinfo&api_key=" + API_KEY + "&format=json"
         PARAMS = {'artist':artist}
 
         response = requests.get(url = url, params = PARAMS)
         return response.json()
+
+    # All below methods take out some of the attributes from JSON output. Return
+    # format metioned above all functions
 
     def set_name(self):
         if 'artist' in self.data and 'name' in self.data['artist']:
@@ -50,10 +46,14 @@ class Artist():
     # returns a string with content about artist <a></a> tags at the end referring a link to read more
     def set_bio(self):
         if 'artist' in self.data and 'bio' in self.data['artist'] and 'summary' in self.data['artist']['bio']:
-            about = self.data['artist']['bio']['summary']
-            about = temp.replace("\n", " ")
-            about = temp.replace("\t", " ")
-            return about
+            str = self.data['artist']['bio']['summary'].split('<a')
+            about = str[0]
+            extra = '<a '+str[1]
+            extra = extra.split('href=')[1]
+            extra = extra.split(">")[0]
+            about = about.replace("\n", " ")
+            about = about.replace("\t", " ")
+            return about, extra[1:-2]
         else:
             return None
 

@@ -11,22 +11,23 @@ class ResultQuery():
 
     def __init__(self, inp):
         self.data = inp
-        self.name = set_name()
-        self.listeners = set_listensers()
-        self.url = set_url()
-        self.image = set_image()
 
-    def set_name():
+        self.name = self.set_name()
+        self.listeners = self.set_listensers()
+        self.url = self.set_url()
+        self.image = self.set_image()
+
+    def set_name(self):
         return self.data['name']
 
-    def set_listensers():
+    def set_listensers(self):
         return self.data['listeners']
 
-    def set_url():
+    def set_url(self):
         return self.data['url']
 
-    def set_image():
+    def set_image(self):
         dict = {}
-        for i range(len(data['image'])):
-            dict[data['image'][i]['size']] = data['image'][i]['#text']
+        for i in range(len(self.data['image'])):
+            dict[self.data['image'][i]['size']] = self.data['image'][i]['#text']
         return dict
