@@ -12,6 +12,9 @@ redirected by:
 
 <!-- this page is evoked only when there is a user logged in, not otherwise-->
 {% block content %}
+  <!-- list of results after search is named 'page'
+    If no search yet, that is 'page' does not have a list OR if 'page' has list
+      loop through to display -->
     {% if page == None %}
       <h1>Hi, {{ current_user.username }}!</h1>
     {% else %}
@@ -19,9 +22,8 @@ redirected by:
         {% for results in page %}
             <li>
               <div>
+                <!-- pass the name of artist clicked to 'clicked_artist_details' in routes.py -->
                   <a href = "{{url_for('clicked_artist_details', query=results.name)}}">{{results.name}}</a>
-                  <!-- <a href= "url_for('clicked_artist_details', query = {{results.name}})">{{results.name}}</a> -->
-                  <!-- <a href = {{results.url}}>{{results.name}}</a> -->
               </div>
             </li>
         {% endfor %}

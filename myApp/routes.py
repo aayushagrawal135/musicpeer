@@ -3,6 +3,7 @@ from myApp import app, db
 from myApp.forms import LoginForm, RegistrationForm
 from myApp.Page import ResultPage
 from myApp.Artist import Artist
+from myApp.TrackList import TrackList
 from myApp.models import User, History
 from flask_login import logout_user, login_required, current_user, login_user
 from werkzeug.urls import url_parse
@@ -97,12 +98,23 @@ def register():
 @app.route('/clicked_artist_details/<query>', methods=['GET', 'POST'])
 @login_required
 def clicked_artist_details(query):
+
+    list_tracks = TrackList(query)
+    print("AAAAAAAAAA",query)
+    list_tracks = list_tracks.get_results()
     log = History(username=current_user, body=query)
     #db.session.add(log)
     #db.session.commit()
     print('Log added')
     artist = Artist(query)
-    return render_template('clicked_artist_details.html', artist=artist)
+    return render_template('clicked_artist_details.html', artist=artist, list_tracks=list_tracks)
+
+#@app.route('/clicked_artist_track_details.html/<name>/<url>', methods=['GET', 'POST'])
+#@login_required
+#def clicked_artist_track_details(name, url):
+#    print("RRRRRRRRRRRR",query)
+#    return render_template('clicked_artist_track_details.html', track=query)
+
 
 @app.route('/search_history')
 def search_history():

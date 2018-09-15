@@ -15,12 +15,16 @@ class Artist():
         self.ontour = self.set_ontour()
         self.tags = self.set_tags()
 
+    # make URL, pass parameters, get response, get it in JSON
     def set_artist(self, artist):
         url = root_url + "?method=artist.getinfo&api_key=" + API_KEY + "&format=json"
         PARAMS = {'artist':artist}
 
         response = requests.get(url = url, params = PARAMS)
         return response.json()
+
+    # All below methods take out some of the attributes from JSON output. Return
+    # format metioned above all functions
 
     def set_name(self):
         if 'artist' in self.data and 'name' in self.data['artist']:

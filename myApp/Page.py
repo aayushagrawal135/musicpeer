@@ -7,9 +7,7 @@ from myApp import API_KEY, root_url
 from myApp.Query import ResultQuery
 
 class ResultPage():
-    data = None
-    result_list = None
-
+    
     def __init__(self, query):
         self.data = self.set_results(query)
         self.result_list = self.set_list()
