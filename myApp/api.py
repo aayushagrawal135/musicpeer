@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 # This is a test file | Do not follow
 
+=======
+>>>>>>> 2b7593a9e119807fde84af720a8c400fe29712ab
 import requests
 # ?method=artist.search&artist=cher&api_key=YOUR_API_KEY&format=json
 

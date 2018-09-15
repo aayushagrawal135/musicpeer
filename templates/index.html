@@ -1,0 +1,16 @@
+<!--
+rendered by:
+          def index()
+          def login() - only when failed login
+redirected by:
+          def login() - only when successful login
+          def logout()
+-->
+
+
+{% extends "base.html" %}
+
+<!-- this page is evoked only when there is a user logged in, not otherwise-->
+{% block content %}
+    <h1>Hi, {{ current_user.username }}!</h1>
+{% endblock %}
