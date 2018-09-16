@@ -34,13 +34,7 @@
                       </li>
 
                       <!-- 'name attribute helps to reference the search bar -->
-                      <li>
-                        <form class="form-inline" action=" {{ url_for('index') }}" method="post">
-                          <input class="form-control mr-sm-2" type="text" name="q" placeholder="Search">
-                          <!--<input type="submit">-->
-                          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                        </form>
-                      </li>
+
 
                       <!-- current_user is function from LoginManager: It can be used in all the template-->
                       {% if current_user.is_anonymous %}
@@ -58,6 +52,13 @@
                             <a class="nav-link" href="{{ url_for('logout') }}"><h4>LOGOUT</h4></a>
                           </li>
 
+                          <li>
+                            <form class="form-inline" action=" {{ url_for('index') }}" method="post">
+                              <input class="form-control mr-sm-2" type="text" name="q" placeholder="Search">
+                              <!--<input type="submit">-->
+                              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                            </form>
+                          </li>
                       {% endif %}
 
                   </ul>
