@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div>
+    <ul>
+      {% for results in page %}
+          <li>
+              <!-- pass the name of artist clicked to 'clicked_artist_details' in routes.py -->
+              <span><a href = "{{url_for('clicked_artist_details', query=results.name)}}"><h5>{{results.name}}</h5></a></span>
+          </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+{% endblock %}

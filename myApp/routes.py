@@ -29,9 +29,10 @@ def index():
     if value != None:
         page = ResultPage(value)
         page = page.get_results()
-        return render_template('index.html', title='Home Page', page=page)
-    else:
-        return render_template('index.html', title='Home Page', page=None)
+        if page != None:
+            return render_template('search_list.html', title='Home Page', page=page)
+
+    return render_template('index.html', title='Home Page')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -59,7 +60,6 @@ def login():
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('index')
-            print("next page her -> ", next_page)
         return redirect(next_page)
 
     # load login.html page, pass the following written agruments to the html
@@ -120,7 +120,6 @@ def clicked_artist_details(query):
 @app.route('/search_history')
 def search_history():
     log_list = list_user_Logs(db.session, current_user.username)
-    print(log_list)
     return render_template('search_history.html', log_list=log_list)
 
 @app.route('/clear_search_history')
@@ -128,5 +127,4 @@ def clear_search_history():
     print(current_user.username)
     delete_user_Log(db.session, current_user.username)
     log_list = list_user_Logs(db.session, current_user.username)
-    print(log_list)
     return render_template('search_history.html', log_list=log_list)

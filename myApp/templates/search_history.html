@@ -12,13 +12,13 @@
       {% else %}
         <h1>Your past is here, {{current_user.username}}</h1>
       {% endif %}
-      <a href="{{url_for('clear_search_history')}}">Clear Hishtory!</a>
+      <a href="{{url_for('clear_search_history')}}"><h3>Clear History</h3></a>
     </div>
 
     <div>
       <ul>
         {% for log in log_list %}
-          <li>{{log[1]}}<br></li>
+          <li><h4>{{log[1]}}</h4><br></li>
         {% endfor %}
       </ul>
     </div>

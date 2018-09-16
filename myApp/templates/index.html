@@ -15,19 +15,8 @@ redirected by:
 
     <!-- base.html -> navbar -> Resultpage -> page -->
     <!-- no value entered in search-bar, no page -->
-    {% if page == None %}
+    
       <h1>Hi, {{ current_user.username }}!</h1>
     <!-- value entered in navbar thus a page (list) -->
-    {% else %}
-      <ul>
-        {% for results in page %}
-            <li>
-              <div>
-                <!-- pass the name of artist clicked to 'clicked_artist_details' in routes.py -->
-                  <a href = "{{url_for('clicked_artist_details', query=results.name)}}">{{results.name}}</a>
-              </div>
-            </li>
-        {% endfor %}
-      </ul>
-    {% endif %}
+
 {% endblock %}
