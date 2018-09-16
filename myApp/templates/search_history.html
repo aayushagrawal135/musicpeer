@@ -5,7 +5,15 @@
     This block should do 2 things, list search log of logged in user
     Provide a function to Clear History-->
 {% block content %}
-    <p><h1>Your past is here, {{current_user.username}}</h1><a href="#">Get a new beginning!</a></p>
+
+    <div>
+      {% if log_list|length == 0 %}
+        <h1>Your have no past, {{current_user.username}}</h1>
+      {% else %}
+        <h1>Your past is here, {{current_user.username}}</h1>
+      {% endif %}
+      <a href="{{url_for('clear_search_history')}}">Clear Hishtory!</a>
+    </div>
 
     <div>
       <ul>

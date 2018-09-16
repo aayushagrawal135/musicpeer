@@ -42,7 +42,7 @@ def delete_User(seesion, data):
     db.session.delete(old)
     db.session.commit()
 
-def delete_Log(session, user):
+def delete_user_Log(session, user):
     old = db.session.query(Log).filter(Log.username==user).all()
     for i in range(len(old)):
         db.session.delete(old[i])

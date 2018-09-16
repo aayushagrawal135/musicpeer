@@ -8,7 +8,7 @@ from myApp.models import User, Log
 from flask_login import logout_user, login_required, current_user, login_user
 from werkzeug.urls import url_parse
 from myApp.functions import insert_User, get_next_userid, is_new_User, is_valid_User
-from myApp.functions import insert_Log, get_next_logid, list_user_Logs, list_all_Logs
+from myApp.functions import insert_Log, get_next_logid, list_user_Logs, list_all_Logs, delete_user_Log
 #from myApp import session
 from myApp import db
 from datetime import datetime
@@ -121,5 +121,12 @@ def clicked_artist_details(query):
 def search_history():
     log_list = list_user_Logs(db.session, current_user.username)
     print(log_list)
+    return render_template('search_history.html', log_list=log_list)
 
+@app.route('/clear_search_history')
+def clear_search_history():
+    print(current_user.username)
+    delete_user_Log(db.session, current_user.username)
+    log_list = list_user_Logs(db.session, current_user.username)
+    print(log_list)
     return render_template('search_history.html', log_list=log_list)
