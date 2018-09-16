@@ -6,4 +6,13 @@
     Provide a function to Clear History-->
 {% block content %}
     <p><h1>Your past is here, {{current_user.username}}</h1><a href="#">Get a new beginning!</a></p>
+
+    <div>
+      <ul>
+        {% for log in log_list %}
+          <li>{{log[1]}}<br></li>
+        {% endfor %}
+      </ul>
+    </div>
+
 {% endblock %}

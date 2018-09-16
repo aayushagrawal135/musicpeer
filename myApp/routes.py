@@ -1,13 +1,19 @@
 from flask import render_template, flash, redirect, request, url_for
-from myApp import app, db
+from myApp import app
 from myApp.forms import LoginForm, RegistrationForm
 from myApp.Page import ResultPage
 from myApp.Artist import Artist
 from myApp.TrackList import TrackList
-from myApp.models import User, History
+from myApp.models import User, Log
 from flask_login import logout_user, login_required, current_user, login_user
 from werkzeug.urls import url_parse
+from myApp.functions import insert_User, get_next_userid, is_new_User, is_valid_User
+from myApp.functions import insert_Log, get_next_logid, list_user_Logs, list_all_Logs
+#from myApp import session
+from myApp import db
+from datetime import datetime
 
+# GET : server -> client, POST : client -> server
 @app.route('/', methods = ['GET', 'POST'])
 @login_required
 def start():
@@ -15,31 +21,19 @@ def start():
     return render_template('index.html')
 
 
-# lines above the function: called decorators, they draw the conditions when the
-# following function should be run
-# A decorator-function for home page
 @app.route('/index', methods = ['GET', 'POST'])
-# a decorator/ function from the LoginManager class stating protocol that only logged in
-# users can enter the following function
 @login_required
 def index():
-    # render template lets the .html take over that is mentioned in the 1st argument
-    # from 2nd argument on
-    print(request.form)
+    # value comes from search-bar located in base.html
     value = request.form.get('q')
     if value != None:
-        #print("%%%%%%%%%%%%%%%%", value)
         page = ResultPage(value)
         page = page.get_results()
-        #print("@@@@@@@@@@@@@@@@", page)
         return render_template('index.html', title='Home Page', page=page)
     else:
         return render_template('index.html', title='Home Page', page=None)
 
 
-# decorator-function for Login
-# methods carry what direction of passing of data can occur
-# GET : server -> client, POST : client -> server
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     # states that the current user has provided correct credentials : Doubt
@@ -50,72 +44,82 @@ def login():
     # checks if the conditions specified in LoginForm are met
     if form.validate_on_submit():
         # if username-password pair fails: redirect to same page, login again
-        user = User.query.filter_by(username=form.username.data).first()
-        print(type(user))
-        print(user)
+        data = {}
+        data['username'] = form.username.data
+        data['password'] = form.password.data
+        user = is_valid_User(db.session, data)
 
-        if user is None or not user.check_password(form.password.data):
+        if user == None:
             flash('Invalid username or password')
             return redirect(url_for('login'))
-        # log in the user, a boolean value recvd to form.remember_me.data is also passed
+
+        # store log in the user, a boolean value recvd to form.remember_me.data is also passed
         login_user(user, remember=form.remember_me.data)
 
-                                                                            # Doubt
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('index')
+            print("next page her -> ", next_page)
         return redirect(next_page)
 
-        # load login.html page, pass the following written agruments to the html
+    # load login.html page, pass the following written agruments to the html
     return render_template('login.html', title='Sign In', form=form)
 
 
 @app.route('/logout')
 def logout():
+    #db.session.clear()
     logout_user()
     return redirect(url_for('index'))
+
 
 # protcol for registration
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    # doubt: i dont get when this would be called since current user would never access
-    # regisger button itself
+
     if current_user.is_authenticated:
         return redirect(url_for('index'))
+
     form = RegistrationForm()
     if form.validate_on_submit():
-                                                                                # Doubt
-        user = User(username=form.username.data, email=form.email.data)
-        user.set_password(form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        # all the flash messages are stored in a buffer like context named 'g'
-        flash('Congratulations, you are now a registered user!')
-        # if registration is successful go to login
-        return redirect(url_for('login'))
+        data = {}
+        data['username'] = form.username.data
+        data['email'] = form.email.data
+        if is_new_User(db.session, data):
+            newUser = {}
+            newUser['id'] = get_next_userid(db.session)                                                                        # Doubt
+            newUser['username'] = form.username.data
+            newUser['email'] = form.email.data
+            newUser['password'] = User.set_password(form.password.data)
+            insert_User(db.session, newUser)
+
+            return redirect(url_for('login'))
+
     return render_template('register.html', title='Register', form=form)
 
+# dynamic queries are made by appending like this in the route decorator
 @app.route('/clicked_artist_details/<query>', methods=['GET', 'POST'])
 @login_required
 def clicked_artist_details(query):
-
+    # tracks of the clicked artist
     list_tracks = TrackList(query)
-    print("AAAAAAAAAA",query)
     list_tracks = list_tracks.get_results()
-    log = History(username=current_user, body=query)
-    #db.session.add(log)
-    #db.session.commit()
-    print('Log added')
+
+    # collecting the search- store in database
+    data = {}
+    data['id'] = get_next_logid(db.session)
+    data['username'] = current_user.username
+    data['query'] = query
+    #data['timestamp'] = datetime.utcnow()
+    insert_Log(db.session, data)
+
+    # get artist object from Artist.getInfo API call inside
     artist = Artist(query)
     return render_template('clicked_artist_details.html', artist=artist, list_tracks=list_tracks)
 
-#@app.route('/clicked_artist_track_details.html/<name>/<url>', methods=['GET', 'POST'])
-#@login_required
-#def clicked_artist_track_details(name, url):
-#    print("RRRRRRRRRRRR",query)
-#    return render_template('clicked_artist_track_details.html', track=query)
-
-
 @app.route('/search_history')
 def search_history():
-    return render_template('search_history.html')
+    log_list = list_user_Logs(db.session, current_user.username)
+    print(log_list)
+
+    return render_template('search_history.html', log_list=log_list)

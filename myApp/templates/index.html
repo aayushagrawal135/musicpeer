@@ -12,11 +12,12 @@ redirected by:
 
 <!-- this page is evoked only when there is a user logged in, not otherwise-->
 {% block content %}
-  <!-- list of results after search is named 'page'
-    If no search yet, that is 'page' does not have a list OR if 'page' has list
-      loop through to display -->
+
+    <!-- base.html -> navbar -> Resultpage -> page -->
+    <!-- no value entered in search-bar, no page -->
     {% if page == None %}
       <h1>Hi, {{ current_user.username }}!</h1>
+    <!-- value entered in navbar thus a page (list) -->
     {% else %}
       <ul>
         {% for results in page %}
